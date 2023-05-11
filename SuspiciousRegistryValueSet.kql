@@ -1,13 +1,13 @@
-// Detects Registry values with a data length of 1500 bytes or greater and an entropy value of 5 or more
+// Detects Registry values with a data length of 1500 or greater and an entropy value of 5 or more
 // Initially created for Snake malware used by a FSB Center 16 operator - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-129a
-// Entropy was calculated using Shannon Entropy modified to KQL by @secops_addy - https://github.com/A-dd-Y/secops/blob/main/Hunting-KQL/ShannonEntropy-KQL.md
-// 
+// Entropy was calculated using Shannon Entropy adapted to KQL by @secops_addy - https://github.com/A-dd-Y/secops/blob/main/Hunting-KQL/ShannonEntropy-KQL.md
+// with contributions from @BertJanCyber
 DeviceRegistryEvents
 | where Timestamp between (ago(24h) .. now())
 | where ActionType == 'RegistryValueSet' 
 | where isnotempty(RegistryValueData)
 | where RegistryValueName != "PendingFileRenameOperations" and RegistryValueName != "SenseCmConfiguration"
-| where InitiatingProcessCommandLine !contains "REG add 'HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Advanced Threat Protection'" // contributed by @BertJanCyber
+| where InitiatingProcessCommandLine !contains @'REG  add "HKLM\SOFTWARE\Policies\Microsoft\Windows Advanced Threat Protection"'
 | extend RegBloblen = strlen(RegistryValueData)
 | where RegBloblen >= 1500
 | extend utf = to_utf8(RegistryValueData)
