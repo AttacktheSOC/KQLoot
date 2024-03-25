@@ -1,4 +1,4 @@
-// this function takes a string input (ip address) and checks it against a watchlist that you define
+// this function takes a string input (ip) and checks it against a watchlist that you define
 // returns 'true' if the IP address provided is within one of the IP ranges defined in your watchlist and 'false' otherwise
 // ensure the searchkey of the watchlist is set to the column containing the CIDR notated IPs or modify accordingly
 //
